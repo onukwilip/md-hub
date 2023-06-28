@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import css from "../styles/About.module.scss";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
@@ -7,18 +7,53 @@ import { QMark1 } from "./QMark1";
 import { QMarkAnil } from "./QMarkAnil";
 import { Object3D } from "three";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { gsap } from "gsap";
+import { TypeAnimation } from "react-type-animation";
 
-const About = () => {
+const About: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
+  appRef,
+}) => {
+  const aboutRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollAnimation = (e: Event) => {
+    if (aboutRef.current) {
+      const distanceFromTop = aboutRef?.current?.getBoundingClientRect().top;
+
+      gsap.from(`.landing-h1`, {
+        transform: `translateX(${distanceFromTop * 0.25}px)`,
+        animationFillMode: "forwards",
+        ease: "power.out",
+      });
+      gsap.to(`.${css.line}`, {
+        width: `${Math.max(0, 600 - distanceFromTop)}px`,
+        animationFillMode: "forwards",
+        ease: "power.out",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (appRef.current)
+      appRef.current.addEventListener("scroll", handleScrollAnimation);
+
+    return () => {
+      if (appRef.current)
+        appRef.current.addEventListener("scroll", handleScrollAnimation);
+    };
+  }, [appRef, appRef.current]);
+
   return (
-    <div className={css.about} id="about">
+    <div className={css.about} ref={aboutRef} id="about">
       <div className={css.left}>
         <div className={css.heading}>
-          <h1>About Us</h1>
+          <h1 className="landing-h1">About Us</h1>
           <div className={css.line}></div>
         </div>
         <br />
         <blockquote>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab est atque
+          <TypeAnimation
+            sequence={[
+              `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab est atque
           blanditiis at culpa consectetur totam, dolorum officiis hic nobis sit
           impedit maiores porro pariatur esse! Suscipit provident minus placeat
           quia blanditiis ipsam atque amet est, obcaecati, temporibus quos
@@ -46,7 +81,10 @@ const About = () => {
           ipsum. Architecto porro iusto optio, ab expedita fugit molestiae illo,
           eos dolor officia corporis, voluptatem quaerat iste beatae totam esse
           quod tenetur doloribus repudiandae necessitatibus? Totam, animi
-          dignissimos? Dignissimos?
+          dignissimos? Dignissimos?`,
+            ]}
+            speed={90}
+          />
         </blockquote>
       </div>
       <div className={css.right}>

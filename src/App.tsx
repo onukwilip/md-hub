@@ -10,8 +10,8 @@ function App() {
   return (
     <div className="app" ref={appRef}>
       <Header />
-      <Landing />
-      <About />
+      <Landing appRef={appRef} />
+      <About appRef={appRef} />
       <Services appRef={appRef} />
     </div>
   );

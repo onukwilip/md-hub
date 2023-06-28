@@ -4,12 +4,13 @@
     height: 100vh;
     background: nth($colors, 3);
     padding: 2rem;
-    @include flex(center, start, auto, row);
+    @include flex(stretch, start, auto, row);
     .left {
         width: 50%;
         overflow-wrap: break-word;
         .heading {
             width: 50%;
+            overflow-x: hidden;
             h1 {
                 color: white;
                 text-transform: uppercase;
@@ -18,7 +19,7 @@
                 line-height: 20px;
             }
             .line {
-                width: 65%;
+                width: 0;
                 height: 7px;
                 margin-top: 10px;
                 background: nth($colors, 2);
