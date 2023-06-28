@@ -1,0 +1,24 @@
+$colors: (#e2bd62, #e2c044, #000000, #f5f0f6);
+$light-dark: rgba(black, 0.3);
+$light-black: lighten(black, 40);
+
+@mixin grid($col, $row, $gap) {
+    display: grid;
+    grid-template-columns: $col;
+    grid-auto-rows: $row;
+    gap: $gap;
+}
+
+@mixin flex($ai, $jc, $gap, $fld) {
+    display: flex;
+    align-items: $ai;
+    justify-content: $jc;
+    gap: $gap;
+    flex-direction: $fld;
+}
+
+@mixin media($prefix, $size) {
+    @media (#{$prefix}-width: $size) {
+        @content;
+    }
+}

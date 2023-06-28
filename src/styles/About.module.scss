@@ -1,0 +1,49 @@
+@import "./config.scss";
+
+.about {
+    height: 100vh;
+    background: nth($colors, 3);
+    padding: 2rem;
+    @include flex(center, start, auto, row);
+    .left {
+        width: 50%;
+        overflow-wrap: break-word;
+        .heading {
+            width: 50%;
+            h1 {
+                color: white;
+                text-transform: uppercase;
+                font-weight: 100;
+                font-size: 50px;
+                line-height: 20px;
+            }
+            .line {
+                width: 65%;
+                height: 7px;
+                margin-top: 10px;
+                background: nth($colors, 2);
+            }
+        }
+        blockquote {
+            position: relative;
+            margin-left: 0;
+            text-align: justify;
+            color: white;
+            @include flex(stretch, start, 2rem, row);
+            margin-left: 2rem;
+            &::before {
+                content: "";
+                position: absolute;
+                left: -2rem;
+                height: 100%;
+                width: 7px;
+                background: nth($colors, 2);
+            }
+        }
+    }
+    .right {
+        width: 50%;
+        height: 100%;
+        background: nth($colors, 3);
+    }
+}

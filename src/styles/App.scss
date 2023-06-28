@@ -1,0 +1,11 @@
+.app {
+    overflow-y: auto;
+    overflow-x: hidden;
+    perspective: 50px;
+    position: relative;
+    // background: red;
+    height: 100vh;
+    background: url("../assets/img/walls.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
