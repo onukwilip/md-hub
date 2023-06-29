@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Landing from "./components/Landing";
 import Services from "./components/Services";
 import "./styles/App.scss";
+import Contact from "./components/Contact";
 
 function App() {
   const appRef = useRef<HTMLDivElement>(null);
@@ -13,6 +14,7 @@ function App() {
       <Landing appRef={appRef} />
       <About appRef={appRef} />
       <Services appRef={appRef} />
+      <Contact appRef={appRef} />
     </div>
   );
 }
