@@ -14,3 +14,11 @@ export class EachServiceClass {
     public days: number | string
   ) {}
 }
+
+export class ContactListClass {
+  constructor(
+    public icon: string,
+    public name: string,
+    public descrption: string
+  ) {}
+}

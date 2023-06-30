@@ -87,7 +87,7 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
         animationFillMode: "forwards",
       });
       timeline
-        .to(`.h1`, {
+        .to(`.service-h1`, {
           transform: `translateY(-${distanceFromPageTop * 0.05}px)`,
           opacity: `${Math.min(
             Math.max(0, 1 - distanceFromPageTop / window.innerHeight),
@@ -179,7 +179,7 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   return (
     <div className={css.services} id="services" ref={servicesRef}>
       <div className={css.heading}>
-        <h1 className="h1">Our Services</h1>
+        <h1 className="service-h1">Our Services</h1>
         <div className={css.line}></div>
       </div>
       <img src={blob} alt="" ref={blobRef} className={css.blob} />
@@ -188,8 +188,8 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
           <Rive src="/woman_on_phone.riv" />
         </div>
         <div className={css.right} ref={cardsContainerRef}>
-          {serviceCards.map((eachService) => (
-            <Card service={eachService} />
+          {serviceCards.map((eachService, i) => (
+            <Card service={eachService} key={i} />
           ))}
           {/* <Card service={serviceCards[3]} /> */}
         </div>

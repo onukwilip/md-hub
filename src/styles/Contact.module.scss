@@ -4,10 +4,11 @@
     height: 100vh;
     position: relative;
     padding: 2rem;
-    // transform-style: preserve-3d;
+    @include flex(center, center, 2rem, column);
     overflow: hidden;
     & > * {
         z-index: 1;
+        width: 100%;
     }
     &::after {
         content: "";
@@ -37,6 +38,11 @@
     .heading {
         @include flex(center, center, 0px, column);
         position: relative;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        height: 100px;
+        width: 32% !important;
+        // background: red;
         h1 {
             color: white;
             text-transform: uppercase;
@@ -47,10 +53,101 @@
             width: 100%;
         }
         .line {
-            width: 40%;
+            width: 100%;
             height: 7px;
             margin-top: 10px;
-            background: nth($colors, 2);
+            position: relative;
+            & > .line-child {
+                position: absolute;
+                height: 100%;
+                top: 0;
+                right: 0;
+                background: nth($colors, 2);
+            }
+        }
+    }
+
+    .body {
+        position: relative;
+        color: white;
+        // background: yellow;
+        height: 100%;
+        @include flex(center, center, 0, row);
+        .left {
+            @include flex(center, center, 1rem, column);
+            flex: 1;
+            & > div {
+                @include flex(start, center, 2rem, column);
+                font-size: 24px;
+                .each-contact {
+                    @include flex(center, start, 2rem, row);
+                    font-weight: 100;
+                    .content {
+                        @include flex(start, start, 0.2rem, column);
+                        span {
+                            &:first-of-type {
+                                text-transform: uppercase;
+                            }
+                            &:last-of-type {
+                                font-size: 18px;
+                                font-weight: 400;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .right {
+            flex: 1;
+            .form {
+                width: 60%;
+                @include flex(start, center, 2rem, column);
+                .description-container {
+                    @include flex(start, start, 1rem, column);
+                    width: 100%;
+                    .description {
+                        padding: 10px;
+                        border-radius: 5px;
+                        background: transparent !important;
+                        width: 100%;
+                        color: white !important;
+                        outline: 1.5px solid gray !important;
+                        transition: 200ms;
+                        &:focus {
+                            outline-color: nth($colors, 2) !important;
+                            border: none;
+                        }
+                    }
+                }
+                .actions {
+                    @include flex(center, start, 1rem, row);
+                    button {
+                        padding: 10px 1rem;
+                        width: 120px;
+                        border-radius: 5px;
+                        background: transparent;
+                        border: 1px solid black;
+                        transition: 200ms;
+                        cursor: pointer;
+                        &:first-of-type {
+                            border-color: nth($colors, 2);
+                            color: nth($colors, 2);
+                            &:hover {
+                                background: nth($colors, 2);
+                                color: nth($colors, 4);
+                            }
+                        }
+                        &:last-of-type {
+                            border-color: nth($colors, 4);
+                            color: nth($colors, 4);
+                            &:hover {
+                                background: nth($colors, 4);
+                                color: nth($colors, 2);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
