@@ -41,5 +41,8 @@
                 }
             }
         }
+        @include media(max, 545px) {
+            display: none;
+        }
     }
 }

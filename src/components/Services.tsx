@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, MouseEventHandler, useEffect, useRef } from "react";
 import css from "../styles/Services.module.scss";
 import blob from "../assets/img/blob.svg";
 import Rive from "@rive-app/react-canvas";
@@ -82,10 +82,12 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
       const distanceFromPageTop =
         servicesRef.current.getBoundingClientRect().top;
 
-      timeline.to(`.${css.blob}`, {
-        transform: `translateY(${distanceFromPageTop * 0.1}px)`,
-        animationFillMode: "forwards",
-      });
+      if (distanceFromPageTop > -327) {
+        timeline.to(`.${css.blob}`, {
+          transform: `translateY(${distanceFromPageTop * 0.1}px)`,
+          animationFillMode: "forwards",
+        });
+      }
       timeline
         .to(`.service-h1`, {
           transform: `translateY(-${distanceFromPageTop * 0.05}px)`,
@@ -98,9 +100,9 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
         .to(
           `.${css.line}`,
           {
-            width: `${Math.max(0, 600 - distanceFromPageTop)}px`,
+            width: `${Math.max(0, 400 - distanceFromPageTop)}px`,
             animationFillMode: "forwards",
-            maxWidth: 600,
+            maxWidth: 400,
           },
           "<"
         );
@@ -189,18 +191,57 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
         </div>
         <div className={css.right} ref={cardsContainerRef}>
           {serviceCards.map((eachService, i) => (
-            <Card service={eachService} key={i} />
+            <Card
+              service={eachService}
+              cardsContainerRef={cardsContainerRef}
+              key={i}
+            />
           ))}
-          {/* <Card service={serviceCards[3]} /> */}
         </div>
       </div>
     </div>
   );
 };
 
-const Card: FC<{ service: SeriviceCard }> = ({ service }) => {
+const Card: FC<{
+  service: SeriviceCard;
+  cardsContainerRef: React.RefObject<HTMLDivElement>;
+}> = ({ service, cardsContainerRef }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const onHover: MouseEventHandler<HTMLDivElement> = (e) => {
+    gsap.to(e.target, {
+      transform: `rotateX(0) translateZ(0)`,
+      animationFillMode: "forwards",
+      opacity: 1,
+    });
+  };
+
+  const onMouseOut: MouseEventHandler<HTMLDivElement> = (e) => {
+    if (cardRef.current && cardsContainerRef.current) {
+      const distanceFromLeft = Math.abs(
+        cardRef.current.offsetLeft - cardsContainerRef.current.scrollLeft
+      );
+
+      gsap.to(e.target, {
+        transform: `rotateX(${distanceFromLeft * 0.04}deg) translateZ(${
+          distanceFromLeft * 0.04
+        }px)`,
+        animationFillMode: "forwards",
+        opacity: `${Math.min(
+          Math.max(0, 1 - distanceFromLeft / window.innerHeight),
+          1
+        )}`,
+      });
+    }
+  };
+
   return (
-    <div className={css.card}>
+    <div
+      className={css.card}
+      onMouseOver={onHover}
+      onMouseOut={onMouseOut}
+      ref={cardRef}
+    >
       <div
         className={css["img-container"]}
         style={{ background: service.color }}

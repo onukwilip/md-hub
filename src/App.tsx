@@ -9,13 +9,15 @@ import Contact from "./components/Contact";
 function App() {
   const appRef = useRef<HTMLDivElement>(null);
   return (
-    <div className="app" ref={appRef}>
-      <Header />
-      <Landing appRef={appRef} />
-      <About appRef={appRef} />
-      <Services appRef={appRef} />
-      <Contact appRef={appRef} />
-    </div>
+    <>
+      <Header appRef={appRef} />
+      <div className="app" ref={appRef}>
+        <Landing appRef={appRef} />
+        <About appRef={appRef} />
+        <Services appRef={appRef} />
+        <Contact appRef={appRef} />
+      </div>
+    </>
   );
 }
 

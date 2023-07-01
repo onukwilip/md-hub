@@ -4,7 +4,7 @@
     height: 100vh;
     position: relative;
     padding: 2rem;
-    @include flex(center, center, 2rem, column);
+    @include flex(center, start, 2rem, column);
     overflow: hidden;
     & > * {
         z-index: 1;
@@ -36,13 +36,12 @@
     }
 
     .heading {
-        @include flex(center, center, 0px, column);
+        @include flex(center, start, 0px, column);
         position: relative;
         overflow-x: hidden;
         overflow-y: hidden;
         height: 100px;
         width: 32% !important;
-        // background: red;
         h1 {
             color: white;
             text-transform: uppercase;
@@ -65,12 +64,24 @@
                 background: nth($colors, 2);
             }
         }
+        @include media(max, 1000px) {
+            width: 500px !important;
+        }
+        @include media(max, 520px) {
+            width: 300px !important;
+        }
+        @include media(max, 320px) {
+            width: 100% !important;
+            overflow: initial;
+            h1 {
+                line-height: 3rem;
+            }
+        }
     }
 
     .body {
         position: relative;
         color: white;
-        // background: yellow;
         height: 100%;
         @include flex(center, center, 0, row);
         .left {
@@ -149,5 +160,38 @@
                 }
             }
         }
+
+        @include media(max, 1200px) {
+            width: 100%;
+            .left,
+            .right {
+                width: 100%;
+            }
+            .left {
+                & > div {
+                    width: 100%;
+                }
+            }
+            .right {
+                .form {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    @include media(max, 825px) {
+        .body {
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .bg-wrapper,
+        .bg-wrapper img,
+        &::after {
+            height: 200vh;
+        }
+
+        height: auto;
     }
 }

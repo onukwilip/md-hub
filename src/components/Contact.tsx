@@ -3,7 +3,7 @@ import css from "../styles/Contact.module.scss";
 import bg from "../assets/img/potential-bg-2.png";
 import { ContactListClass } from "../utils";
 import Input from "./Input";
-import { Form, TextArea } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { useInput } from "use-manage-form";
 import { gsap } from "gsap";
 
@@ -117,12 +117,31 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
       const maxDistance = window.innerHeight / 2;
       const scale = 1 - Math.min(distance / maxDistance, 1);
 
-      gsap.to(`.${css.form}`, {
-        transform: `scale(${scale})`,
-        animationFillMode: "forwards",
-        ease: "power.out",
-        duration: 0.9,
-      });
+      if (elementRect.top > -150) {
+        gsap.to(`.${css.form}`, {
+          transform: `scale(${scale})`,
+          animationFillMode: "forwards",
+          ease: "power.out",
+          duration: 0.9,
+        });
+      }
+      if (window.innerHeight <= 900) {
+        if (elementRect.top < 70) {
+          gsap.to(`.${css.form}`, {
+            transform: `scale(${1})`,
+            animationFillMode: "forwards",
+            ease: "power.out",
+            duration: 0.9,
+          });
+        } else {
+          gsap.to(`.${css.form}`, {
+            transform: `scale(${0})`,
+            animationFillMode: "forwards",
+            ease: "power.out",
+            duration: 0.9,
+          });
+        }
+      }
     }
   };
 
@@ -138,7 +157,7 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   }, [appRef, appRef.current]);
 
   return (
-    <div className={css.contact} ref={contactRef}>
+    <div className={css.contact} ref={contactRef} id="contact">
       <div className={css.heading}>
         <h1 className="contact-h1">Contact us</h1>
         <div className={css.line}>

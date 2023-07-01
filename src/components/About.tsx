@@ -87,7 +87,7 @@ const About: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
           />
         </blockquote>
       </div>
-      <div className={css.right}>
+      <div className={css.right} tabIndex={5}>
         <Canvas>
           <QuestionScene />
         </Canvas>

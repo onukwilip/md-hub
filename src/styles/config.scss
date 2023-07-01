@@ -22,3 +22,9 @@ $light-black: lighten(black, 40);
         @content;
     }
 }
+
+@mixin media-h($prefix, $size) {
+    @media (#{$prefix}-height: $size) {
+        @content;
+    }
+}

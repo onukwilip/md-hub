@@ -24,21 +24,33 @@
                 margin-top: 10px;
                 background: nth($colors, 2);
             }
+            @include media(max, 1125px) {
+                width: 100%;
+            }
         }
         blockquote {
             position: relative;
-            margin-left: 0;
             text-align: justify;
             color: white;
             @include flex(stretch, start, 2rem, row);
-            margin-left: 2rem;
+            padding: 1rem 0;
+            margin: 0;
             &::before {
                 content: "";
                 position: absolute;
-                left: -2rem;
+                // left: -2rem;
+                left: 0;
                 height: 100%;
                 width: 7px;
                 background: nth($colors, 2);
+            }
+            & > span {
+                max-height: 60vh;
+                overflow-y: auto;
+                padding-left: 2rem;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
             }
         }
     }
@@ -46,5 +58,35 @@
         width: 50%;
         height: 100%;
         background: nth($colors, 3);
+    }
+    @include media(max, 980px) {
+        position: relative;
+        .left {
+            z-index: 1;
+            width: 100%;
+            background: transparent;
+            .heading {
+                width: 50%;
+            }
+        }
+        .right {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+    }
+    @include media(max, 750px) {
+        .left {
+            .heading {
+                width: 100%;
+            }
+        }
+        blockquote {
+            padding: 0;
+        }
+    }
+    @include media(max, 450px) {
+        padding: 2rem 15px;
     }
 }
