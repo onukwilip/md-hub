@@ -63,6 +63,7 @@ const Header: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
 };
 
 const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
+  const bgImgRef = useRef<HTMLImageElement>(null);
   const onClose = () => {
     const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
 
@@ -89,11 +90,8 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
 
   const initialAnimation = () => {
     const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
-    const bg = document.querySelectorAll(
-      `.${css.bg}`
-    ) as NodeListOf<HTMLImageElement>;
 
-    gsap.from(bg[0], {
+    gsap.from(bgImgRef, {
       top: "-25rem",
       right: "-52rem",
       animationFillMode: "forwards",
@@ -138,7 +136,7 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
             Contact Us
           </a>
         </nav>
-        <img className={css.bg} src={manuBlob} alt="bg" />
+        <img className={css.bg} src={manuBlob} ref={bgImgRef} alt="bg" />
       </div>
     </>
   );
