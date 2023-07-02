@@ -87,7 +87,7 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
     setTimeout(() => closeMenu(false), 400);
   };
 
-  useEffect(() => {
+  const initialAnimation = () => {
     const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
 
     gsap.from(`.${css.bg}`, {
@@ -106,6 +106,14 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
         delay: i * 0.1,
       });
     });
+  };
+
+  const onLinkClick = () => {
+    onClose();
+  };
+
+  useEffect(() => {
+    initialAnimation();
   }, []);
 
   return (
@@ -114,10 +122,18 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
         <i className="fas fa-xmark" onClick={onClose}></i>
         <br />
         <nav id="mobileNav">
-          <a href="#home">Home</a>
-          <a href="#about">About</a>
-          <a href="#services">Services</a>
-          <a href="#contact">Contact Us</a>
+          <a href="#home" onClick={onLinkClick}>
+            Home
+          </a>
+          <a href="#about" onClick={onLinkClick}>
+            About
+          </a>
+          <a href="#services" onClick={onLinkClick}>
+            Services
+          </a>
+          <a href="#contact" onClick={onLinkClick}>
+            Contact Us
+          </a>
         </nav>
         <img className={css.bg} src={manuBlob} alt="bg" />
       </div>
