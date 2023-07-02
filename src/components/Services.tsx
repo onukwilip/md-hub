@@ -8,6 +8,9 @@ import mtn from "../assets/img/mtn.png";
 import airtel from "../assets/img/airtel.png";
 import glo from "../assets/img/glo.png";
 import nineMobile from "../assets/img/9mobile.png";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const serviceCards = [
   new SeriviceCard(
@@ -67,6 +70,14 @@ const serviceCards = [
     }
   ),
 ];
+
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+};
 
 const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   appRef,
@@ -164,17 +175,17 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   useEffect(() => {
     if (appRef.current)
       appRef.current.addEventListener("scroll", handleScrollAnimation);
-    if (cardsContainerRef.current)
-      cardsContainerRef.current.addEventListener("scroll", handleCardsScroll);
+    // if (cardsContainerRef.current)
+    //   cardsContainerRef.current.addEventListener("scroll", handleCardsScroll);
 
     return () => {
       if (appRef.current)
         appRef.current.removeEventListener("scroll", handleScrollAnimation);
-      if (cardsContainerRef.current)
-        cardsContainerRef.current.removeEventListener(
-          "scroll",
-          handleCardsScroll
-        );
+      // if (cardsContainerRef.current)
+      //   cardsContainerRef.current.removeEventListener(
+      //     "scroll",
+      //     handleCardsScroll
+      //   );
     };
   }, [appRef, appRef.current]);
 
@@ -189,14 +200,20 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
         <div className={css.left}>
           <Rive src="/woman_on_phone.riv" />
         </div>
-        <div className={css.right} ref={cardsContainerRef}>
-          {serviceCards.map((eachService, i) => (
-            <Card
-              service={eachService}
-              cardsContainerRef={cardsContainerRef}
-              key={i}
-            />
-          ))}
+        <div
+          className={css.right}
+          ref={cardsContainerRef}
+          style={{ padding: 0, overflow: "inherit" }}
+        >
+          <Slider {...settings}>
+            {serviceCards.map((eachService, i) => (
+              <Card
+                service={eachService}
+                cardsContainerRef={cardsContainerRef}
+                key={i}
+              />
+            ))}
+          </Slider>
         </div>
       </div>
     </div>
