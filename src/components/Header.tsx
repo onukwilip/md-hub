@@ -91,7 +91,7 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
   const initialAnimation = () => {
     const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
 
-    gsap.from(bgImgRef, {
+    gsap.from(bgImgRef.current, {
       top: "-25rem",
       right: "-52rem",
       animationFillMode: "forwards",
