@@ -45,4 +45,73 @@
             display: none;
         }
     }
+    .hamburger {
+        display: none;
+        color: white;
+        font-size: 24px;
+        &:hover {
+            color: nth($colors, 2);
+        }
+        @include media(max, 545px) {
+            display: block;
+        }
+    }
+}
+
+.mobile-menu {
+    position: fixed;
+    z-index: 15;
+    width: 100vw;
+    height: 100vh;
+    @include flex(end, start, 1rem, column);
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    // background: url(../assets//img/menu-blob.svg);
+    // background-repeat: no-repeat;
+    // background-size: 1500px 700px;
+    // background-position-y: -100px;
+    // background-position-x: -400px;
+    nav {
+        @include flex(center, start, 3rem, column);
+        position: relative;
+        z-index: 1;
+        a {
+            text-decoration: none;
+            position: relative;
+            color: white;
+            padding: 0 1rem;
+            @include flex(center, center, auto, column);
+
+            &::before {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 3px;
+                bottom: -5px;
+                transition: 200ms;
+            }
+            &:hover {
+                &::before {
+                    content: "";
+                    position: absolute;
+                    width: 100%;
+                    background: nth($colors, 3);
+                }
+            }
+        }
+    }
+    i {
+        position: relative;
+        z-index: 1;
+        font-size: 24px;
+        color: whites;
+    }
+    .bg {
+        position: absolute;
+        top: -5rem;
+        right: -22rem;
+        height: 105vh;
+        width: auto;
+        filter: drop-shadow(0px 0px 5px rgba(black, 0.3));
+    }
 }

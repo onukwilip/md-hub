@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import css from "../styles/Header.module.scss";
 import logo from "../assets/img/logo.png";
+import manuBlob from "../assets/img/menu-blob.svg";
 import { gsap } from "gsap";
 
 const Header: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   appRef,
 }) => {
   const headerRef = useRef<HTMLDivElement>(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   const handleScrollAnimation = () => {
     console.log(appRef?.current?.scrollTop);
@@ -37,17 +39,89 @@ const Header: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   }, [appRef, appRef.current]);
 
   return (
-    <div className={css.header} ref={headerRef}>
-      <div className={css.logo}>
-        <img src={logo} alt="" />
+    <>
+      <div className={css.header} ref={headerRef}>
+        <div className={css.logo}>
+          <img src={logo} alt="" />
+        </div>
+        <nav>
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#contact">Contact Us</a>
+        </nav>
+        <div className={css.hamburger}>
+          <i
+            className="fas fa-bars-staggered"
+            onClick={() => setShowMenu(true)}
+          ></i>
+        </div>
       </div>
-      <nav>
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#contact">Contact Us</a>
-      </nav>
-    </div>
+      {showMenu && <MobileMenu closeMenu={setShowMenu} />}
+    </>
+  );
+};
+
+const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
+  const onClose = () => {
+    const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
+
+    gsap.to(`.${css.bg}`, {
+      top: "-25rem",
+      right: "-52rem",
+      animationFillMode: "forwards",
+      ease: "power.out",
+      duration: 0.5,
+    });
+
+    Array.from(mobileNav.children).forEach((menu, i) => {
+      gsap.to(menu, {
+        right: "-52rem",
+        animationFillMode: "forwards",
+        ease: "power.out",
+        duration: 0.5,
+        delay: i * 0.1,
+      });
+    });
+
+    setTimeout(() => closeMenu(false), 400);
+  };
+
+  useEffect(() => {
+    const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
+
+    gsap.from(`.${css.bg}`, {
+      top: "-25rem",
+      right: "-52rem",
+      animationFillMode: "forwards",
+      ease: "power.out",
+    });
+
+    Array.from(mobileNav.children).forEach((menu, i) => {
+      gsap.from(menu, {
+        right: "-52rem",
+        animationFillMode: "forwards",
+        ease: "power.out",
+        duration: 0.5,
+        delay: i * 0.1,
+      });
+    });
+  }, []);
+
+  return (
+    <>
+      <div className={css["mobile-menu"]}>
+        <i className="fas fa-xmark" onClick={onClose}></i>
+        <br />
+        <nav id="mobileNav">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#contact">Contact Us</a>
+        </nav>
+        <img className={css.bg} src={manuBlob} alt="bg" />
+      </div>
+    </>
   );
 };
 
