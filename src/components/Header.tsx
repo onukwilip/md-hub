@@ -67,7 +67,7 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
   const onClose = () => {
     const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
 
-    gsap.to(`.${css.bg}`, {
+    gsap.to(bgImgRef.current, {
       top: "-25rem",
       right: "-52rem",
       animationFillMode: "forwards",
@@ -87,7 +87,6 @@ const MobileMenu: React.FC<{ closeMenu: Function }> = ({ closeMenu }) => {
 
     setTimeout(() => closeMenu(false), 400);
   };
-
   const initialAnimation = () => {
     const mobileNav = document.getElementById("mobileNav") as HTMLDivElement;
 
