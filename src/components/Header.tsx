@@ -11,8 +11,6 @@ const Header: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   const [showMenu, setShowMenu] = useState(false);
 
   const handleScrollAnimation = () => {
-    console.log(appRef?.current?.scrollTop);
-
     if (appRef.current?.scrollTop && appRef.current?.scrollTop > 790) {
       gsap.to(`.${css.header}`, {
         background: `rgba(0,0,0,0.5)`,
