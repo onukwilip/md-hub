@@ -1,7 +1,8 @@
 export class SeriviceCard {
   constructor(
     public image: string,
-    public list: EachServiceClass[],
+    public priceList?: EachServiceClass[],
+    public randomList?: string[],
     public color?: string,
     public imgPosition?: React.CSSProperties
   ) {}

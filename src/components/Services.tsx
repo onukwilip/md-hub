@@ -7,7 +7,12 @@ import { EachServiceClass, SeriviceCard } from "../utils";
 import mtn from "../assets/img/mtn.png";
 import airtel from "../assets/img/airtel.png";
 import glo from "../assets/img/glo.png";
+import otherServices from "../assets/img/other-services.png";
 import nineMobile from "../assets/img/9mobile.png";
+import Slider from "react-slick";
+import VanillaTilt from "vanilla-tilt";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const serviceCards = [
   new SeriviceCard(
@@ -20,6 +25,7 @@ const serviceCards = [
       new EachServiceClass(1500, 5, 30),
       new EachServiceClass(3000, 10, 30),
     ],
+    undefined,
     "#e2c044"
   ),
   new SeriviceCard(
@@ -32,6 +38,7 @@ const serviceCards = [
       new EachServiceClass(1500, 5, 30),
       new EachServiceClass(3000, 10, 30),
     ],
+    undefined,
     "orangered",
     {
       top: -170,
@@ -48,6 +55,7 @@ const serviceCards = [
       new EachServiceClass(1500, 5, 30),
       new EachServiceClass(3000, 10, 30),
     ],
+    undefined,
     "darkgreen"
   ),
   new SeriviceCard(
@@ -60,13 +68,36 @@ const serviceCards = [
       new EachServiceClass(1250, 5, 30),
       new EachServiceClass(1500, 10, 30),
     ],
+    undefined,
     "green",
     {
       top: -110,
       transform: "scale(0.9)",
     }
   ),
+  new SeriviceCard(
+    otherServices,
+    undefined,
+    [
+      "Payment of electricity bills.",
+      "Cable subscription (DSTV, GOTV, Startimes).",
+      "Conversion of airtime to cash (for all networks).",
+    ],
+    "purple",
+    {
+      top: -70,
+      transform: "scale(1.2)",
+    }
+  ),
 ];
+
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+};
 
 const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   appRef,
@@ -115,66 +146,37 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
         ease: "power.out",
       });
 
-      const serviceCards = document.querySelectorAll(
-        `.${css.card}`
-      ) as NodeListOf<HTMLDivElement>;
-
-      serviceCards.forEach((card, i) => {
-        gsap.to(card, {
-          transform: `rotateX(${distanceFromPageTop * 0.1}deg) translateZ(${
-            distanceFromPageTop * 0.1
-          }px)`,
+      if (servicesRef.current.getBoundingClientRect().top < 100) {
+        gsap.to(cardsContainerRef.current, {
+          transform: "scale(1)",
           animationFillMode: "forwards",
-          opacity: `${Math.min(
-            Math.max(0, 1 - distanceFromPageTop / window.innerHeight),
-            1
-          )}`,
-          delay: i * 0.5,
         });
-      });
+      } else {
+        gsap.to(cardsContainerRef.current, {
+          transform: "scale(0)",
+          animationFillMode: "forwards",
+        });
+      }
     }
   };
 
-  const handleCardsScroll = (e: Event) => {
-    const serviceCards = document.querySelectorAll(
-      `.${css.card}`
-    ) as NodeListOf<HTMLDivElement>;
-
-    serviceCards.forEach((card, i) => {
-      if (cardsContainerRef.current) {
-        const distanceFromLeft =
-          i < 3
-            ? Math.abs(card.offsetLeft - cardsContainerRef.current.scrollLeft)
-            : Math.abs(card.offsetLeft - cardsContainerRef.current.scrollLeft) *
-              0.5;
-        gsap.to(card, {
-          transform: `rotateX(${distanceFromLeft * 0.04}deg) translateZ(${
-            distanceFromLeft * 0.04
-          }px)`,
-          animationFillMode: "forwards",
-          opacity: `${Math.min(
-            Math.max(0, 1 - distanceFromLeft / window.innerHeight),
-            1
-          )}`,
-        });
-      }
-    });
-  };
+  VanillaTilt.init(
+    document.querySelectorAll(`.${css.card}`) as unknown as HTMLDivElement[],
+    {
+      max: 25,
+      speed: 400,
+      glare: true,
+      "max-glare": 2.5,
+    }
+  );
 
   useEffect(() => {
     if (appRef.current)
       appRef.current.addEventListener("scroll", handleScrollAnimation);
-    if (cardsContainerRef.current)
-      cardsContainerRef.current.addEventListener("scroll", handleCardsScroll);
 
     return () => {
       if (appRef.current)
         appRef.current.removeEventListener("scroll", handleScrollAnimation);
-      if (cardsContainerRef.current)
-        cardsContainerRef.current.removeEventListener(
-          "scroll",
-          handleCardsScroll
-        );
     };
   }, [appRef, appRef.current]);
 
@@ -189,14 +191,20 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
         <div className={css.left}>
           <Rive src="/woman_on_phone.riv" />
         </div>
-        <div className={css.right} ref={cardsContainerRef}>
-          {serviceCards.map((eachService, i) => (
-            <Card
-              service={eachService}
-              cardsContainerRef={cardsContainerRef}
-              key={i}
-            />
-          ))}
+        <div
+          className={css.right}
+          ref={cardsContainerRef}
+          style={{ padding: 0, overflow: "inherit" }}
+        >
+          <Slider {...settings}>
+            {serviceCards.map((eachService, i) => (
+              <Card
+                service={eachService}
+                cardsContainerRef={cardsContainerRef}
+                key={i}
+              />
+            ))}
+          </Slider>
         </div>
       </div>
     </div>
@@ -208,39 +216,33 @@ const Card: FC<{
   cardsContainerRef: React.RefObject<HTMLDivElement>;
 }> = ({ service, cardsContainerRef }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const onHover: MouseEventHandler<HTMLDivElement> = (e) => {
-    gsap.to(e.target, {
-      transform: `rotateX(0) translateZ(0)`,
-      animationFillMode: "forwards",
-      opacity: 1,
-    });
-  };
 
-  const onMouseOut: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (cardRef.current && cardsContainerRef.current) {
-      const distanceFromLeft = Math.abs(
-        cardRef.current.offsetLeft - cardsContainerRef.current.scrollLeft
-      );
+  // const onClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+  //   const xAxis = (window.innerWidth / 2 - e.pageX) / 10;
+  //   const yAxis = (window.innerHeight / 2 - e.pageY) / 10;
 
-      gsap.to(e.target, {
-        transform: `rotateX(${distanceFromLeft * 0.04}deg) translateZ(${
-          distanceFromLeft * 0.04
-        }px)`,
-        animationFillMode: "forwards",
-        opacity: `${Math.min(
-          Math.max(0, 1 - distanceFromLeft / window.innerHeight),
-          1
-        )}`,
-      });
-    }
-  };
+  //   console.log("clicked", xAxis, yAxis);
+
+  //   const timeline = gsap.timeline();
+  //   timeline.to(e.target, {
+  //     transform: `rotateX(${xAxis}deg) rotateY(${yAxis}deg)`,
+  //     duration: 0.5,
+  //   });
+  //   timeline.to(
+  //     e.target,
+  //     {
+  //       transform: `rotateX(0deg) rotateY(0deg)`,
+  //       duration: 0.5,
+  //     },
+  //     ">"
+  //   );
+  // };
 
   return (
     <div
       className={css.card}
-      onMouseOver={onHover}
-      onMouseOut={onMouseOut}
       ref={cardRef}
+      // onClick={onClick}
     >
       <div
         className={css["img-container"]}
@@ -249,7 +251,7 @@ const Card: FC<{
         <img src={service.image} alt="" style={service.imgPosition} />
       </div>
       <div className={css.content}>
-        {service.list.map((eachItem) => (
+        {service?.priceList?.map((eachItem) => (
           <>
             <li>
               Pay{" "}
@@ -261,6 +263,11 @@ const Card: FC<{
               </span>{" "}
               get <span>{eachItem.data}GB</span> for {eachItem.days} days
             </li>
+          </>
+        ))}
+        {service?.randomList?.map((eachItem) => (
+          <>
+            <li>{eachItem}</li>
           </>
         ))}
       </div>
