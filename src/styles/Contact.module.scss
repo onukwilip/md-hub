@@ -116,6 +116,30 @@
                 .description-container {
                     @include flex(start, start, 1rem, column);
                     width: 100%;
+                    label {
+                        @include flex(center, space-between, 1rem, row);
+                        width: 100%;
+                    }
+                    i.error {
+                        font-size: 16px;
+                        color: orangered;
+                        cursor: pointer;
+                        & + span {
+                            background: orangered;
+                            border-radius: 5px;
+                            color: white;
+                            font-size: 12px;
+                            position: absolute;
+                            padding: 5px;
+                            white-space: nowrap;
+                            text-transform: none;
+                            display: none;
+                            z-index: 1;
+                        }
+                        &:hover + span {
+                            display: block;
+                        }
+                    }
                     .description {
                         padding: 10px;
                         border-radius: 5px;
@@ -128,7 +152,29 @@
                             outline-color: nth($colors, 2) !important;
                             border: none;
                         }
+                        &.error {
+                            outline-color: orangered !important;
+                            &:focus {
+                                outline-color: nth($colors, 2) !important;
+                            }
+                        }
                     }
+                }
+                div.success {
+                    width: 100%;
+                    padding: 0.5rem;
+                    text-align: center;
+                    background: lightgreen;
+                    color: darkgreen;
+                    border-radius: 5px;
+                }
+                div.error {
+                    width: 100%;
+                    padding: 0.5rem;
+                    text-align: center;
+                    background: orangered;
+                    color: white;
+                    border-radius: 5px;
                 }
                 .actions {
                     @include flex(center, start, 1rem, row);

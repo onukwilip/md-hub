@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emailjs/browser": "^3.11.0",
     "@react-three/drei": "^9.77.5",
     "@react-three/fiber": "^8.13.4",
     "@rive-app/react-canvas": "^3.0.54",

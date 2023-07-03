@@ -1,17 +1,18 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import css from "../styles/Contact.module.scss";
 import bg from "../assets/img/potential-bg-2.png";
 import { ContactListClass } from "../utils";
 import Input from "./Input";
 import { Form } from "semantic-ui-react";
-import { useInput } from "use-manage-form";
+import { useForm, useInput } from "use-manage-form";
 import { gsap } from "gsap";
+import emailjs from "@emailjs/browser";
 
 const contactsList = [
   new ContactListClass(
     "fas fa-location-dot",
     "Address",
-    "123 some street some address"
+    "Block C23-11, NIGERIAN ARMY SHOPPING ARENA"
   ),
   new ContactListClass("fas fa-phone", "Phone", "+234 9160951173"),
   new ContactListClass(
@@ -22,7 +23,7 @@ const contactsList = [
   new ContactListClass(
     "fa-solid fa-earth-americas",
     "Website",
-    "www.example.com"
+    "https://md-hub.vercel.app"
   ),
 ];
 
@@ -31,6 +32,12 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
 }) => {
   const contactRef = useRef<HTMLDivElement>(null);
   const rightSideRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [response, setResponse] = useState<{
+    status: "OK" | "ERROR";
+    message: string;
+  } | null>(null);
 
   const {
     value: name,
@@ -39,7 +46,7 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
     onChange: onNameChange,
     onBlur: onNameBlur,
     reset: resetName,
-  } = useInput<string>((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value !== undefined && value?.trim() !== "");
 
   const {
     value: email,
@@ -51,13 +58,13 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
   } = useInput<string>((value) => value?.includes("@") || false);
 
   const {
-    value: sublect,
-    isValid: sublectIsValid,
-    inputIsInValid: sublectInputIsInvalid,
-    onChange: onSublectChange,
-    onBlur: onSublectBlur,
-    reset: resetSublect,
-  } = useInput<string>((value) => value?.trim() !== "");
+    value: subject,
+    isValid: subjectIsValid,
+    inputIsInValid: subjectInputIsInvalid,
+    onChange: onSubjectChange,
+    onBlur: onSubjectBlur,
+    reset: resetSubject,
+  } = useInput<string>((value) => value !== undefined && value?.trim() !== "");
 
   const {
     value: description,
@@ -66,7 +73,14 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
     onChange: onDescriptionChange,
     onBlur: onDescriptionBlur,
     reset: resetDescription,
-  } = useInput<string>((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value !== undefined && value?.trim() !== "");
+
+  const { formIsValid, executeBlurHandlers, reset } = useForm({
+    blurHandlers: [onDescriptionBlur, onNameBlur, onSubjectBlur, onEmailBlur],
+    resetHandlers: [resetDescription, resetEmail, resetName, resetSubject],
+    validateOptions: () =>
+      nameIsValid && subjectIsValid && emailIsValid && descriptionIsValid,
+  });
 
   const handleScrollAnimation = (e: Event) => {
     if (contactRef.current && rightSideRef.current) {
@@ -145,6 +159,61 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
     }
   };
 
+  const handleSuscessOrErrorResponse = (
+    status: "OK" | "ERROR",
+    message: string
+  ) => {
+    setResponse({ status, message });
+
+    setTimeout(() => setResponse(null), 3000);
+  };
+
+  const submitHandler = async () => {
+    if (!formIsValid) return executeBlurHandlers();
+
+    if (formRef.current) {
+      setSendingEmail(true);
+
+      const response = await emailjs
+        .sendForm(
+          "service_8w9yg7l",
+          "template_37qjcyr",
+          document.getElementById("form") as HTMLFormElement,
+          "Go2gywtbtyG3uO9pN"
+        )
+        .catch((e) => {
+          setSendingEmail(false);
+          handleSuscessOrErrorResponse(
+            "ERROR",
+            "There was an error sending your message, please try again"
+          );
+        });
+
+      if (response?.status === 200) {
+        setSendingEmail(false);
+        handleSuscessOrErrorResponse("OK", "Message sent successfully");
+        reset();
+      } else {
+        setSendingEmail(false);
+        setResponse({
+          status: "ERROR",
+          message: "There was an error sending your message, please try again",
+        });
+        handleSuscessOrErrorResponse(
+          "ERROR",
+          "There was an error sending your message, please try again"
+        );
+        console.log("STATUS", response?.status);
+      }
+      setSendingEmail(false);
+    } else {
+      handleSuscessOrErrorResponse(
+        "ERROR",
+        "There was an error sending your message, please try again"
+      );
+    }
+  };
+
   useEffect(() => {
     console.log("Form", rightSideRef.current);
     if (appRef.current)
@@ -178,52 +247,108 @@ const Contact: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
           </div>
         </div>
         <div className={css.right} ref={rightSideRef}>
-          <Form className={css.form}>
+          <Form
+            className={css.form}
+            ref={formRef}
+            onSubmit={submitHandler}
+            id="form"
+          >
             <Input
               value={name}
               onChange={(e) => onNameChange(e.target.value)}
               onBlur={onNameBlur as any}
-              name="name"
+              name="from_name"
+              label="name"
               placeholder="Enter name"
               id="name"
               icon="fas fa-user"
               type="text"
+              error={
+                nameInputIsInvalid && {
+                  content: "Input must not be empty!",
+                  position: { right: "0", bottom: "-3rem" },
+                }
+              }
             />
             <Input
               value={email}
               onChange={(e) => onEmailChange(e.target.value)}
               onBlur={onEmailBlur as any}
-              name="email"
+              name="reply_to"
+              label="email"
               placeholder="Enter email"
               id="email"
               icon="fa-solid fa-envelopes-bulk"
               type="email"
+              error={
+                emailInputIsInvalid && {
+                  content:
+                    "Input must not be empty and must be a valid email address!",
+                  position: { right: "0", bottom: "-3rem" },
+                }
+              }
             />
             <Input
-              value={sublect}
-              onChange={(e) => onSublectChange(e.target.value)}
-              onBlur={onSublectBlur as any}
+              value={subject}
+              onChange={(e) => onSubjectChange(e.target.value)}
+              onBlur={onSubjectBlur as any}
               name="subject"
               placeholder="Enter subject"
               id="subject"
               icon="fa-solid fa-envelope-open-text"
               type="text"
+              error={
+                subjectInputIsInvalid && {
+                  content: "Input must not be empty!",
+                  position: { right: "0", bottom: "-3rem" },
+                }
+              }
             />
             <div className={css["description-container"]}>
-              <label htmlFor="description">Description</label>
+              <label htmlFor="description">
+                Description{" "}
+                {descriptionInputIsInvalid && (
+                  <span>
+                    <i
+                      className={`${css.error} fa-solid fa-triangle-exclamation fa-beat`}
+                    ></i>
+                    <span style={{ right: "0" }}>Input must not be empty!</span>
+                  </span>
+                )}
+              </label>
               <textarea
                 placeholder="Enter description"
-                className={css.description}
+                className={`${css.description} ${
+                  descriptionInputIsInvalid && css.error
+                }`}
                 id="description"
+                name="message"
                 value={description}
                 onChange={(e) => onDescriptionChange(e.target.value)}
                 onBlur={onDescriptionBlur as any}
                 style={{ minHeight: 100 }}
               />
             </div>
+            {response && (
+              <>
+                {response.status === "OK" ? (
+                  <>
+                    <div className={css.success}>{response.message}</div>
+                  </>
+                ) : response.status === "ERROR" ? (
+                  <>
+                    <div className={css.error}>{response.message}</div>
+                  </>
+                ) : null}
+              </>
+            )}
             <div className={css.actions}>
-              <button>Send</button>
-              <button>Reset</button>
+              <button type="submit" disabled={sendingEmail}>
+                {sendingEmail ? "Sending..." : "Send"}
+              </button>
+              <button type="reset" onClick={() => reset()}>
+                Reset
+              </button>
             </div>
           </Form>
         </div>
