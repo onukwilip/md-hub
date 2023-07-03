@@ -217,33 +217,8 @@ const Card: FC<{
 }> = ({ service, cardsContainerRef }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // const onClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-  //   const xAxis = (window.innerWidth / 2 - e.pageX) / 10;
-  //   const yAxis = (window.innerHeight / 2 - e.pageY) / 10;
-
-  //   console.log("clicked", xAxis, yAxis);
-
-  //   const timeline = gsap.timeline();
-  //   timeline.to(e.target, {
-  //     transform: `rotateX(${xAxis}deg) rotateY(${yAxis}deg)`,
-  //     duration: 0.5,
-  //   });
-  //   timeline.to(
-  //     e.target,
-  //     {
-  //       transform: `rotateX(0deg) rotateY(0deg)`,
-  //       duration: 0.5,
-  //     },
-  //     ">"
-  //   );
-  // };
-
   return (
-    <div
-      className={css.card}
-      ref={cardRef}
-      // onClick={onClick}
-    >
+    <div className={css.card} ref={cardRef}>
       <div
         className={css["img-container"]}
         style={{ background: service.color }}
