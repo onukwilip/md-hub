@@ -160,16 +160,6 @@ const Services: React.FC<{ appRef: React.RefObject<HTMLDivElement> }> = ({
     }
   };
 
-  VanillaTilt.init(
-    document.querySelectorAll(`.${css.card}`) as unknown as HTMLDivElement[],
-    {
-      max: 25,
-      speed: 400,
-      glare: true,
-      "max-glare": 2.5,
-    }
-  );
-
   useEffect(() => {
     if (appRef.current)
       appRef.current.addEventListener("scroll", handleScrollAnimation);
@@ -216,6 +206,15 @@ const Card: FC<{
   cardsContainerRef: React.RefObject<HTMLDivElement>;
 }> = ({ service, cardsContainerRef }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    VanillaTilt.init(cardRef.current as HTMLDivElement, {
+      max: 25,
+      speed: 400,
+      glare: true,
+      "max-glare": 2.5,
+    });
+  }, []);
 
   return (
     <div className={css.card} ref={cardRef}>
